@@ -1,0 +1,15 @@
+{
+  "name": "Bookmark Link Checker",
+  "description": "ブックマークのリンク切れを検出して削除を提案します。",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "action": {
+	"default_title": "Bookmark Link Checker",
+	"default_popup": "popup.html"
+  },
+  "permissions": ["bookmarks", "storage"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+	"service_worker": "background.js"
+  }
+}
