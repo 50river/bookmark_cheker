@@ -14,6 +14,16 @@ const selectedCount = document.getElementById("selectedCount");
 
 let lastScan = null;
 
+(async () => {
+  // 前回のスキャン結果があれば復元
+  const { lastScan: saved } = await chrome.storage.local.get("lastScan");
+  if (saved && saved.broken) {
+    lastScan = saved;
+    summary.textContent = `対象: ${saved.total} 件 / リンク切れ候補: ${saved.broken.length} 件`;
+    renderBroken(saved.broken);
+  }
+})();
+
 function resetUI() {
   progressWrap.style.display = "none";
   listWrap.style.display = "none";
@@ -92,11 +102,13 @@ scanBtn.addEventListener("click", async () => {
   scanBtn.textContent = "リンク切れをスキャン";
 
   if (!res || !res.ok) {
-	progressText.textContent = "エラーが発生しました。";
-	return;
+        progressText.textContent = "エラーが発生しました。";
+        return;
   }
 
   lastScan = res;
+  // 結果を保存
+  chrome.storage.local.set({ lastScan: res });
   progress.value = 100;
   progressText.textContent = "完了！";
 
@@ -147,9 +159,21 @@ deleteBtn.addEventListener("click", async () => {
   // 残数の再計算
   const remaining = document.querySelectorAll(".rowcheck").length;
   summary.textContent = summary.textContent.replace(/リンク切れ候補: \d+ 件/, `リンク切れ候補: ${remaining} 件`);
+
+  // 保存されている結果も更新
+  if (lastScan) {
+        lastScan.broken = lastScan.broken.filter(b => !ids.includes(b.id));
+        if (remaining === 0) {
+          chrome.storage.local.remove("lastScan");
+          lastScan = null;
+        } else {
+          chrome.storage.local.set({ lastScan });
+        }
+  }
+
   if (remaining === 0) {
-	bulkActions.style.display = "none";
-	listWrap.style.display = "none";
+        bulkActions.style.display = "none";
+        listWrap.style.display = "none";
   }
 });
 
