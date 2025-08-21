@@ -38,15 +38,18 @@ function renderBroken(broken) {
 
   tbody.innerHTML = "";
   for (const b of broken) {
-	const tr = document.createElement("tr");
-	tr.innerHTML = `
-	  <td><input type="checkbox" class="rowcheck" data-id="${b.id}"></td>
-	  <td>${escapeHtml(b.title || "")}</td>
-	  <td><a class="link" href="${b.finalUrl || b.url}" target="_blank" rel="noreferrer">${escapeHtml(b.url)}</a></td>
-	  <td class="${b.ok ? "status-ok" : "status-bad"}">${statusLabel(b)}</td>
-	  <td class="folder">${escapeHtml(b.folder || "")}</td>
-	`;
-	tbody.appendChild(tr);
+        const tr = document.createElement("tr");
+        // タイトルもリンクにして、クリックで対象サイトを開けるようにする
+        tr.innerHTML = `
+          <td><input type="checkbox" class="rowcheck" data-id="${b.id}"></td>
+          <td><a class="link" href="${b.finalUrl || b.url}"
+                 target="_blank" rel="noreferrer">${escapeHtml(b.title || "")}</a></td>
+          <td><a class="link" href="${b.finalUrl || b.url}"
+                 target="_blank" rel="noreferrer">${escapeHtml(b.url)}</a></td>
+          <td class="${b.ok ? "status-ok" : "status-bad"}">${statusLabel(b)}</td>
+          <td class="folder">${escapeHtml(b.folder || "")}</td>
+        `;
+        tbody.appendChild(tr);
   }
   updateSelectedCount();
 }
