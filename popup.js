@@ -11,6 +11,8 @@ const selectAll = document.getElementById("selectAll");
 const selectHeader = document.getElementById("selectHeader");
 const deleteBtn = document.getElementById("delete");
 const selectedCount = document.getElementById("selectedCount");
+const filterRow = document.getElementById("filterRow"); // フィルタ行
+const statusFilter = document.getElementById("statusFilter"); // ステータスフィルタ
 
 let lastScan = null;
 
@@ -18,6 +20,8 @@ function resetUI() {
   progressWrap.style.display = "none";
   listWrap.style.display = "none";
   bulkActions.style.display = "none";
+  filterRow.style.display = "none";
+  statusFilter.value = "";
   summary.textContent = "";
   tbody.innerHTML = "";
   selectedCount.textContent = "0";
@@ -36,11 +40,18 @@ function updateProgress(done, total) {
 }
 
 function renderBroken(broken) {
+  filterRow.style.display = broken.length ? "flex" : "none";
+  // 選択されたステータスで絞り込み
+  const selected = statusFilter.value;
+  const rows = selected
+        ? broken.filter(b =>
+            selected === "timeout" ? (!b.status && !b.ok) : String(b.status) === selected)
+        : broken;
   listWrap.style.display = broken.length ? "block" : "none";
-  bulkActions.style.display = broken.length ? "flex" : "none";
+  bulkActions.style.display = rows.length ? "flex" : "none";
 
   tbody.innerHTML = "";
-  for (const b of broken) {
+  for (const b of rows) {
         const tr = document.createElement("tr");
         // タイトルもリンクにして、クリックで対象サイトを開けるようにする
         tr.innerHTML = `
@@ -120,6 +131,11 @@ scanBtn.addEventListener("click", async () => {
 	`対象: ${res.total} 件 / リンク切れ候補: ${broken.length} 件`;
 
   renderBroken(broken);
+});
+
+// ステータスフィルタ変更時に再描画
+statusFilter.addEventListener("change", () => {
+  if (lastScan) renderBroken(lastScan.broken);
 });
 
 document.addEventListener("change", (e) => {
