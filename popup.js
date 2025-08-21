@@ -23,6 +23,9 @@ function resetUI() {
   selectedCount.textContent = "0";
   selectAll.checked = false;
   selectHeader.checked = false;
+  // 保存済みの結果をクリア
+  lastScan = null;
+  chrome.storage.local.remove("lastScan");
 }
 
 function updateProgress(done, total) {
@@ -72,6 +75,16 @@ function updateSelectedCount() {
   selectedCount.textContent = String(getCheckedIds().length);
 }
 
+// 前回のスキャン結果があれば復元
+chrome.storage.local.get("lastScan", ({ lastScan: saved }) => {
+  if (saved) {
+    lastScan = saved;
+    const broken = saved.broken || [];
+    summary.textContent = `対象: ${saved.total} 件 / リンク切れ候補: ${broken.length} 件`;
+    renderBroken(broken);
+  }
+});
+
 scanBtn.addEventListener("click", async () => {
   resetUI();
   updateProgress(0, 0);
@@ -92,11 +105,13 @@ scanBtn.addEventListener("click", async () => {
   scanBtn.textContent = "リンク切れをスキャン";
 
   if (!res || !res.ok) {
-	progressText.textContent = "エラーが発生しました。";
-	return;
+        progressText.textContent = "エラーが発生しました。";
+        return;
   }
 
   lastScan = res;
+  // 結果を保存
+  chrome.storage.local.set({ lastScan: res });
   progress.value = 100;
   progressText.textContent = "完了！";
 
@@ -147,9 +162,21 @@ deleteBtn.addEventListener("click", async () => {
   // 残数の再計算
   const remaining = document.querySelectorAll(".rowcheck").length;
   summary.textContent = summary.textContent.replace(/リンク切れ候補: \d+ 件/, `リンク切れ候補: ${remaining} 件`);
+
+  // 保存内容の更新
+  if (lastScan) {
+        lastScan.broken = lastScan.broken.filter(b => !ids.includes(b.id));
+        if (lastScan.broken.length) {
+          chrome.storage.local.set({ lastScan });
+        } else {
+          chrome.storage.local.remove("lastScan");
+          lastScan = null;
+        }
+  }
+
   if (remaining === 0) {
-	bulkActions.style.display = "none";
-	listWrap.style.display = "none";
+        bulkActions.style.display = "none";
+        listWrap.style.display = "none";
   }
 });
 
