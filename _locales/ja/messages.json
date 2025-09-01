@@ -1,0 +1,33 @@
+{
+  "extName": { "message": "Bookmark Link Checker" },
+  "extDesc": { "message": "ブックマークのリンク切れを検出して削除を提案します。" },
+  "actionTitle": { "message": "Bookmark Link Checker" },
+
+  "scan": { "message": "リンク切れをスキャン" },
+  "scanning": { "message": "スキャン中…" },
+  "exportCsv": { "message": "CSVエクスポート" },
+  "preparing": { "message": "準備中…" },
+
+  "filterByStatus": { "message": "ステータスで絞り込み:" },
+  "filterAll": { "message": "すべて" },
+  "filterTimeout": { "message": "タイムアウト" },
+
+  "selectAll": { "message": "すべて選択" },
+  "selectedCountSuffix": { "message": "件選択中" },
+  "deleteSelected": { "message": "選択を削除" },
+
+  "colTitle": { "message": "タイトル" },
+  "colStatus": { "message": "ステータス" },
+  "colFolder": { "message": "フォルダ" },
+
+  "progressRunning": { "message": "$1 / $2 チェック中…" },
+  "statusNg": { "message": "NG $1" },
+  "statusTimeout": { "message": "接続失敗/タイムアウト" },
+  "summary": { "message": "対象: $1 件 / リンク切れ候補: $2 件" },
+
+  "errorOccurred": { "message": "エラーが発生しました。" },
+  "done": { "message": "完了！" },
+  "confirmDelete": { "message": "$1 件のブックマークを削除します。よろしいですか？" },
+  "deleting": { "message": "削除中…" },
+  "deleteError": { "message": "削除中にエラーが発生しました。" }
+}

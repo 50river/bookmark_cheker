@@ -1,0 +1,33 @@
+{
+  "extName": { "message": "Bookmark Link Checker" },
+  "extDesc": { "message": "Detects broken bookmark links and suggests deletion." },
+  "actionTitle": { "message": "Bookmark Link Checker" },
+
+  "scan": { "message": "Scan Broken Links" },
+  "scanning": { "message": "Scanning…" },
+  "exportCsv": { "message": "Export CSV" },
+  "preparing": { "message": "Preparing…" },
+
+  "filterByStatus": { "message": "Filter by status:" },
+  "filterAll": { "message": "All" },
+  "filterTimeout": { "message": "Timeout" },
+
+  "selectAll": { "message": "Select all" },
+  "selectedCountSuffix": { "message": "selected" },
+  "deleteSelected": { "message": "Delete selected" },
+
+  "colTitle": { "message": "Title" },
+  "colStatus": { "message": "Status" },
+  "colFolder": { "message": "Folder" },
+
+  "progressRunning": { "message": "$1 / $2 checking…" },
+  "statusNg": { "message": "NG $1" },
+  "statusTimeout": { "message": "Connection failed/Timeout" },
+  "summary": { "message": "Targets: $1 / Broken candidates: $2" },
+
+  "errorOccurred": { "message": "An error occurred." },
+  "done": { "message": "Done!" },
+  "confirmDelete": { "message": "Delete $1 bookmarks?" },
+  "deleting": { "message": "Deleting…" },
+  "deleteError": { "message": "An error occurred during deletion." }
+}

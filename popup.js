@@ -16,6 +16,25 @@ const statusFilter = document.getElementById("statusFilter"); // ステータス
 
 let lastScan = null;
 
+// Apply i18n messages to elements with data-i18n attributes
+function applyI18nStatic() {
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    const msg = chrome.i18n.getMessage(key);
+    if (!msg) return;
+    if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+      if (el.hasAttribute("placeholder")) el.setAttribute("placeholder", msg);
+      else el.value = msg;
+    } else if (el.tagName === "TITLE") {
+      document.title = msg;
+    } else {
+      el.textContent = msg;
+    }
+  });
+  // Set document language to UI language
+  try { document.documentElement.lang = (chrome.i18n.getUILanguage() || "").split("-")[0] || ""; } catch {}
+}
+
 function resetUI() {
   progressWrap.style.display = "none";
   listWrap.style.display = "none";
@@ -36,7 +55,8 @@ function updateProgress(done, total) {
   progressWrap.style.display = "block";
   const pct = total ? Math.round((done / total) * 100) : 0;
   progress.value = pct;
-  progressText.textContent = `${done} / ${total} チェック中…`;
+  progressText.textContent = chrome.i18n.getMessage("progressRunning", [String(done), String(total)])
+    || `${done} / ${total}`;
 }
 
 function renderBroken(broken) {
@@ -74,8 +94,8 @@ function escapeHtml(str) {
 
 function statusLabel(b) {
   if (b.ok) return `OK ${b.status || ""}`;
-  if (b.status) return `NG ${b.status}`;
-  return "接続失敗/タイムアウト";
+  if (b.status) return chrome.i18n.getMessage("statusNg", [String(b.status)]) || `NG ${b.status}`;
+  return chrome.i18n.getMessage("statusTimeout") || "Timeout";
 }
 
 function getCheckedIds() {
@@ -91,7 +111,8 @@ chrome.storage.local.get("lastScan", ({ lastScan: saved }) => {
   if (saved) {
     lastScan = saved;
     const broken = saved.broken || [];
-    summary.textContent = `対象: ${saved.total} 件 / リンク切れ候補: ${broken.length} 件`;
+    summary.textContent = chrome.i18n.getMessage("summary", [String(saved.total), String(broken.length)])
+      || `${saved.total} / ${broken.length}`;
     renderBroken(broken);
   }
 });
@@ -108,15 +129,15 @@ scanBtn.addEventListener("click", async () => {
   });
 
   scanBtn.disabled = true;
-  scanBtn.textContent = "スキャン中…";
+  scanBtn.textContent = chrome.i18n.getMessage("scanning") || scanBtn.textContent;
 
   const res = await chrome.runtime.sendMessage({ type: "scan" }).catch(() => null);
 
   scanBtn.disabled = false;
-  scanBtn.textContent = "リンク切れをスキャン";
+  scanBtn.textContent = chrome.i18n.getMessage("scan") || scanBtn.textContent;
 
   if (!res || !res.ok) {
-        progressText.textContent = "エラーが発生しました。";
+        progressText.textContent = chrome.i18n.getMessage("errorOccurred") || "Error";
         return;
   }
 
@@ -124,11 +145,11 @@ scanBtn.addEventListener("click", async () => {
   // 結果を保存
   chrome.storage.local.set({ lastScan: res });
   progress.value = 100;
-  progressText.textContent = "完了！";
+  progressText.textContent = chrome.i18n.getMessage("done") || "Done";
 
   const broken = res.broken;
-  summary.textContent =
-	`対象: ${res.total} 件 / リンク切れ候補: ${broken.length} 件`;
+  summary.textContent = chrome.i18n.getMessage("summary", [String(res.total), String(broken.length)])
+    || `${res.total} / ${broken.length}`;
 
   renderBroken(broken);
 });
@@ -157,18 +178,18 @@ deleteBtn.addEventListener("click", async () => {
   const ids = getCheckedIds();
   if (!ids.length) return;
 
-  if (!confirm(`${ids.length} 件のブックマークを削除します。よろしいですか？`)) return;
+  if (!confirm(chrome.i18n.getMessage("confirmDelete", [String(ids.length)]) || "Delete?")) return;
 
   deleteBtn.disabled = true;
-  deleteBtn.textContent = "削除中…";
+  deleteBtn.textContent = chrome.i18n.getMessage("deleting") || deleteBtn.textContent;
 
   const res = await chrome.runtime.sendMessage({ type: "delete", ids }).catch(() => null);
 
   deleteBtn.disabled = false;
-  deleteBtn.textContent = "選択を削除";
+  deleteBtn.textContent = chrome.i18n.getMessage("deleteSelected") || deleteBtn.textContent;
 
   if (!res || !res.ok) {
-	alert("削除中にエラーが発生しました。");
+	alert(chrome.i18n.getMessage("deleteError") || "Delete error");
 	return;
   }
 
@@ -177,7 +198,11 @@ deleteBtn.addEventListener("click", async () => {
   updateSelectedCount();
   // 残数の再計算
   const remaining = document.querySelectorAll(".rowcheck").length;
-  summary.textContent = summary.textContent.replace(/リンク切れ候補: \d+ 件/, `リンク切れ候補: ${remaining} 件`);
+  // Rebuild summary with remaining count
+  const totalMatch = /\d+/.exec(summary.textContent);
+  const total = lastScan?.total || (totalMatch ? Number(totalMatch[0]) : 0);
+  summary.textContent = chrome.i18n.getMessage("summary", [String(total), String(remaining)])
+    || `${total} / ${remaining}`;
 
   // 保存内容の更新
   if (lastScan) {
@@ -215,3 +240,6 @@ exportBtn.addEventListener("click", () => {
   a.click();
   URL.revokeObjectURL(url);
 });
+
+// Apply i18n after DOM built
+document.addEventListener("DOMContentLoaded", applyI18nStatic);

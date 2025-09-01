@@ -1,0 +1,33 @@
+{
+  "extName": { "message": "Bookmark Link Checker" },
+  "extDesc": { "message": "Detecteert kapotte bladwijzerlinks en stelt verwijdering voor." },
+  "actionTitle": { "message": "Bookmark Link Checker" },
+
+  "scan": { "message": "Gebroken links scannen" },
+  "scanning": { "message": "Bezig met scannen…" },
+  "exportCsv": { "message": "CSV exporteren" },
+  "preparing": { "message": "Voorbereiden…" },
+
+  "filterByStatus": { "message": "Filteren op status:" },
+  "filterAll": { "message": "Alles" },
+  "filterTimeout": { "message": "Time-out" },
+
+  "selectAll": { "message": "Alles selecteren" },
+  "selectedCountSuffix": { "message": "geselecteerd" },
+  "deleteSelected": { "message": "Selectie verwijderen" },
+
+  "colTitle": { "message": "Titel" },
+  "colStatus": { "message": "Status" },
+  "colFolder": { "message": "Map" },
+
+  "progressRunning": { "message": "$1 / $2 controleren…" },
+  "statusNg": { "message": "NG $1" },
+  "statusTimeout": { "message": "Verbinding mislukt/Time-out" },
+  "summary": { "message": "Doelen: $1 / Mogelijk gebroken: $2" },
+
+  "errorOccurred": { "message": "Er is een fout opgetreden." },
+  "done": { "message": "Klaar!" },
+  "confirmDelete": { "message": "$1 bladwijzers verwijderen?" },
+  "deleting": { "message": "Bezig met verwijderen…" },
+  "deleteError": { "message": "Er is een fout opgetreden tijdens het verwijderen." }
+}

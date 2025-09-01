@@ -1,10 +1,11 @@
 {
-  "name": "Bookmark Link Checker",
-  "description": "ブックマークのリンク切れを検出して削除を提案します。",
-  "version": "1.0.0",
+  "name": "__MSG_extName__",
+  "description": "__MSG_extDesc__",
+  "version": "1.0.1",
   "manifest_version": 3,
+  "default_locale": "ja",
   "action": {
-	"default_title": "Bookmark Link Checker",
+	"default_title": "__MSG_actionTitle__",
 	"default_popup": "popup.html"
   },
   "permissions": ["bookmarks", "storage"],

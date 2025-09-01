@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
-  <title>Bookmark Link Checker</title>
+  <title data-i18n="extName">Bookmark Link Checker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
         body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; width: 700px; margin: 0; padding: 12px; }
@@ -27,39 +27,39 @@
   </style>
 </head>
 <body>
-  <h1>Bookmark Link Checker</h1>
+  <h1 data-i18n="extName">Bookmark Link Checker</h1>
 
   <div class="row">
-	<button id="scan" class="primary">リンク切れをスキャン</button>
-	<button id="export" class="muted">CSVエクスポート</button>
+	<button id="scan" class="primary" data-i18n="scan">リンク切れをスキャン</button>
+	<button id="export" class="muted" data-i18n="exportCsv">CSVエクスポート</button>
   </div>
 
   <div id="progressWrap" style="display:none;">
 	<div class="row">
 	  <progress id="progress" value="0" max="100"></progress>
 	</div>
-	<div class="small" id="progressText">準備中…</div>
+	<div class="small" id="progressText" data-i18n="preparing">準備中…</div>
   </div>
 
   <div id="summary" class="small" style="margin:8px 0;"></div>
 
   <div class="row" id="filterRow" style="display:none;">
-        <label for="statusFilter">ステータスで絞り込み:</label>
+        <label for="statusFilter" data-i18n="filterByStatus">ステータスで絞り込み:</label>
         <select id="statusFilter">
-          <option value="">すべて</option>
+          <option value="" data-i18n="filterAll">すべて</option>
           <option value="404">404</option>
           <option value="410">410</option>
           <option value="500">500</option>
-          <option value="timeout">タイムアウト</option>
+          <option value="timeout" data-i18n="filterTimeout">タイムアウト</option>
         </select>
   </div>
 
   <div class="actions" id="bulkActions" style="display:none;">
 	<div>
-	  <label><input type="checkbox" id="selectAll" /> すべて選択</label>
-	  <span class="pill"><span id="selectedCount">0</span> 件選択中</span>
+	  <label><input type="checkbox" id="selectAll" /> <span data-i18n="selectAll">すべて選択</span></label>
+	  <span class="pill"><span id="selectedCount">0</span> <span data-i18n="selectedCountSuffix">件選択中</span></span>
 	</div>
-	<button id="delete" class="primary">選択を削除</button>
+	<button id="delete" class="primary" data-i18n="deleteSelected">選択を削除</button>
   </div>
 
   <div class="list" id="list" style="display:none;">
@@ -67,10 +67,10 @@
 	  <thead>
 		<tr>
 		  <th><input type="checkbox" id="selectHeader"></th>
-		  <th>タイトル</th>
+		  <th data-i18n="colTitle">タイトル</th>
 		  <th>URL</th>
-		  <th class="nowrap">ステータス</th>
-		  <th>フォルダ</th>
+		  <th class="nowrap" data-i18n="colStatus">ステータス</th>
+		  <th data-i18n="colFolder">フォルダ</th>
 		</tr>
 	  </thead>
 	  <tbody id="tbody"></tbody>
